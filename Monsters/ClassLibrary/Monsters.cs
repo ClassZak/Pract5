@@ -8,7 +8,7 @@ namespace Mobs
     }
     public class Monster : Spirit
     {
-        enum MonsterTypes
+        public enum MonsterTypes
         {
             ManGhoul,
             BigGhoul,

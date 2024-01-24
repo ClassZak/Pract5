@@ -74,20 +74,41 @@ namespace ConsoleApp
         #region код объявления объектов
         static Mobs.Daemon CreateDaemon(string name,int brain)
         {
+            bool validationFailed = false;
             if(!ValidDaemonBrain(brain))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Failed to create instance of Daemon class. Brain attribute failed");
+                validationFailed = true;
+            }
+            if(!ValidMonsterName(name))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Failed to create instance of Daemon class. Name attribute failed");
+                validationFailed = true;
+            }
+            if (validationFailed)
+            {
+                Console.WriteLine($"Failed to create instance with brain \t{brain}\t and with name {name}\n");
                 Console.ResetColor();
                 return null;
-
             }
-                
-            return new Mobs.Daemon(name, brain);
+            else
+                return new Mobs.Daemon(name, brain);
         }
         static Mobs.Daemon[] PrintDaemonsArray()
         {
-            Mobs.Daemon[] daemon = new Mobs.Daemon[] { CreateDaemon("Sus", 7), CreateDaemon("Amogus", 150), CreateDaemon("AmogusZilla", 5) };
+            Mobs.Daemon[] daemon = new Mobs.Daemon[]
+            {
+                CreateDaemon(Mobs.Monster.MonsterTypes.ManAmogus.ToString(), 30),
+                CreateDaemon(Mobs.Monster.MonsterTypes.BigGhoul.ToString(), 12),
+                CreateDaemon(Mobs.Monster.MonsterTypes.SususAmogus.ToString(),7),
+                CreateDaemon(Mobs.Monster.MonsterTypes.BigAmogus.ToString(),1),
+                CreateDaemon(Mobs.Monster.MonsterTypes.ManGhoul.ToString(),5),
+                CreateDaemon("DangerMonster",5),
+                CreateDaemon("Monster",1),
+                CreateDaemon("DangerMonsterAmogus",5),
+            };
             Console.WriteLine($"Массив демонов({daemon.Length}):");
             for (int i = 0; i < daemon.Length; ++i)
             {
@@ -112,21 +133,12 @@ namespace ConsoleApp
         {
             try
             {
-                object[] attrs = 
-                    typeof(Mobs.Monster).
-                    GetField("name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetCustomAttributes(false);
-                for(int i = 0;i< attrs.Length; ++i)
-                {
-                    Console.WriteLine($"{i}\t{attrs[i].ToString()}");
-                }
-
-                /*
                 if(DaemonArrayFailed(PrintDaemonsArray()))
                 {
                     Console.ForegroundColor= ConsoleColor.Red;
                     Console.WriteLine("Не удалось создать все объекты");
                     Console.ResetColor();
-                }*/
+                }
             }
             catch (Exception ex)
             {
