@@ -8,8 +8,20 @@ namespace Mobs
     }
     public class Monster : Spirit
     {
+        enum MonsterTypes
+        {
+            ManGhoul,
+            BigGhoul,
+            ManAmogus,
+            SususAmogus,
+            BigAmogus,
+        };
+
+        [MonsterNameAttribute(new string[2] {"Ghoul","Amogus"})]
         string name;
         int health, ammo;
+
+        
         public Monster()
         {
             this.health = 100;

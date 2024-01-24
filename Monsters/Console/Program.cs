@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System;
 using Mobs;
+using System.Data;
 
 namespace ConsoleApp
 {
@@ -33,6 +34,35 @@ namespace ConsoleApp
 
             return false;
         }
+        static bool ValidMonsterName(string name)
+        {
+            bool isValud = false;
+            try
+            {
+                object[] attrs = (typeof(Mobs.Monster).GetField("name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetCustomAttributes(false));
+                foreach (var item in attrs)
+                {
+                    if (item.GetType() == typeof(Mobs.MonsterNameAttribute))
+                    {
+                        foreach(string Name in ((Mobs.MonsterNameAttribute)(item)).names)
+                        if(name.EndsWith(Name))
+                        {
+                            isValud = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Не удалось сделать проверку имени:");
+                Console.WriteLine(ex.ToString());
+                Console.ResetColor();
+            }
+
+            return isValud;
+        }
         static bool DaemonArrayFailed(Mobs.Daemon[] daemon)
         {
             for (int i = 0; i < daemon.Length; ++i)
@@ -57,7 +87,7 @@ namespace ConsoleApp
         }
         static Mobs.Daemon[] PrintDaemonsArray()
         {
-            Mobs.Daemon[] daemon = new Mobs.Daemon[] { CreateDaemon("Sus", 1), CreateDaemon("Amogus", 150), CreateDaemon("AmogusZilla", 5) };
+            Mobs.Daemon[] daemon = new Mobs.Daemon[] { CreateDaemon("Sus", 7), CreateDaemon("Amogus", 150), CreateDaemon("AmogusZilla", 5) };
             Console.WriteLine($"Массив демонов({daemon.Length}):");
             for (int i = 0; i < daemon.Length; ++i)
             {
@@ -82,12 +112,21 @@ namespace ConsoleApp
         {
             try
             {
+                object[] attrs = 
+                    typeof(Mobs.Monster).
+                    GetField("name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetCustomAttributes(false);
+                for(int i = 0;i< attrs.Length; ++i)
+                {
+                    Console.WriteLine($"{i}\t{attrs[i].ToString()}");
+                }
+
+                /*
                 if(DaemonArrayFailed(PrintDaemonsArray()))
                 {
                     Console.ForegroundColor= ConsoleColor.Red;
                     Console.WriteLine("Не удалось создать все объекты");
                     Console.ResetColor();
-                }
+                }*/
             }
             catch (Exception ex)
             {
