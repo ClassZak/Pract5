@@ -36,17 +36,27 @@ namespace ConsoleApp
         }
         static bool ValidMonsterName(string name)
         {
+            bool valid = false;
             try
             {
                 object[] attrs = (typeof(Mobs.Monster).GetField("name", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetCustomAttributes(false));
+                bool haveAttr = false;
                 foreach (var item in attrs)
                 {
                     if (item.GetType() == typeof(Mobs.MonsterNameAttribute))
                     {
+                        haveAttr = true;
                         foreach (string Name in ((Mobs.MonsterNameAttribute)(item)).names)
-                            return (name.EndsWith(Name));
+                        {
+                            if (!valid)
+                                valid = (name.EndsWith(Name));
+                            else
+                                return valid;
+                        }
+                            
                     }
                 }
+                if(!haveAttr)
                 throw new Exception("Failed to check name for Monster. Field \"name\" of class Monster have not such attribute");
             }
             catch(Exception ex)
@@ -55,7 +65,7 @@ namespace ConsoleApp
                 Console.WriteLine(ex.ToString());
                 Console.ResetColor();
             }
-            return false;
+            return valid;
         }
         static bool DaemonArrayFailed(Mobs.Daemon[] daemon)
         {
