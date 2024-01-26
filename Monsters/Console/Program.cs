@@ -56,7 +56,7 @@ namespace ConsoleApp
             catch(Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Не удалось сделать проверку имени:");
+                Console.WriteLine("Failed to check name for Monster. Field \"name\" of class Monster have not such attribute");
                 Console.WriteLine(ex.ToString());
                 Console.ResetColor();
             }
